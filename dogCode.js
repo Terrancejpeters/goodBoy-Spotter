@@ -4,16 +4,20 @@
   var startRow = 2;  // First row of data to process
   var numRows = sheet.getLastRow() - 1;   // Number of rows to process
   // Fetch the range of cells A2:B3
-  var dataRange = sheet.getRange(startRow, 1, numRows, 6)
+  var dataRange = sheet.getRange(startRow, 1, numRows, 7)
   // Fetch values for each row in the Range.
   var data = dataRange.getValues();
   var last = data[sheet.getLastRow() - 2];
-  var time = last[4].toString().substring(16,21);
+  var time = last[0].toString().substring(16,21);
   var hour = time.substring(0,2);
   var min = time.substring(2,5);
   var hourInt = parseInt(hour);
   var stamp = "am"
     
+  
+  var imgURL = last[6]
+  
+  /*var imgBlob = UrlFetchApp.fetch(imgURL).getBlob().setName("dogBlob");*/
     if (hourInt > 12){
       hourInt = hourInt - 12;
       stamp = "pm"
@@ -28,15 +32,19 @@
     
     if (last[5] != ""){
       var message = "Hello!\n\nWe wanted to let you know a DOG was spotted at " + hourInt + min + stamp + " near " + last[3] + "! This pup was a " + last[2] + " and a very good dog."
-      + " Our expert sources suggestion that he was heading towards " + last[5] + ". Go get some good pets in! \n\nBest,\nThe GoodPups Team";  
+      + " Our expert sources suggestion that he was heading towards " + last[5] + ". Go get some good pets in! \n\nBest,\nThe GoodPups Team\n\n PS QUOTA: " + MailApp.getRemainingDailyQuota();  
     }
     else{
       var message = "Hello!\n\nWe wanted to let you know a DOG was spotted at " + hourInt + min + stamp + " near " + last[3] + "! This pup was a " + last[2] + " and a very good dog."
-      + " Go get some good pets in! \n\nBest,\nThe GoodPups Team \n\n PS The Date and Time is " + last[0];  
+      + " Go get some good pets in! \n\nBest,\nThe GoodPups Team \n\n  PS QUOTA: " + MailApp.getRemainingDailyQuota();  
     }
     var subject = "A DOG HAS BEEN SPOTTED";
     MailApp.sendEmail(emailAddress, subject, message);
   }
+}
+
+function getIdFromUrl(url) { 
+  return url.match(/[-\w]{25,}/); 
 }
 
 
